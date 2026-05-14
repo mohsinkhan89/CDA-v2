@@ -159,20 +159,57 @@ function build_admin_body(array $contact): string
 {
     $fileUrl = base_url() . $contact['file'];
 
-    return '<h2>New contact form submission</h2>'
-        . '<table cellpadding="8" cellspacing="0" border="1" style="border-collapse:collapse">'
-        . '<tr><th align="left">Name</th><td>' . e($contact['name']) . '</td></tr>'
-        . '<tr><th align="left">Email</th><td>' . e($contact['email']) . '</td></tr>'
-        . '<tr><th align="left">Note</th><td>' . nl2br(e($contact['note'])) . '</td></tr>'
-        . '<tr><th align="left">File</th><td><a href="' . e($fileUrl) . '">' . e($fileUrl) . '</a></td></tr>'
-        . '</table>';
+    $content = '<p style="margin:0 0 18px;color:#4b5563;font-size:15px;line-height:1.6;">A new enquiry has been submitted from the contact form.</p>'
+        . email_detail_row('Name', $contact['name'])
+        . email_detail_row('Email', $contact['email'])
+        . email_detail_row('Note', nl2br(e($contact['note'])), true)
+        . '<div style="margin-top:24px;">'
+        . '<a href="' . e($fileUrl) . '" style="display:inline-block;background:#2b8b94;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:13px 20px;border-radius:4px;">View Uploaded File</a>'
+        . '</div>';
+
+    return email_shell('New Contact Enquiry', 'Admin Notification', $content);
 }
 
 function build_user_body(string $name): string
 {
-    return '<p>Dear ' . e($name) . ',</p>'
-        . '<p>Thank you for contacting Centre For Domestic Abuse. Your message has been received and our team will review it shortly.</p>'
-        . '<p>Regards,<br>' . SITE_NAME . '</p>';
+    $content = '<p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.7;">Dear ' . e($name) . ',</p>'
+        . '<p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.7;">Thank you for contacting Centre For Domestic Abuse. Your message has been received and our team will review it shortly.</p>'
+        . '<p style="margin:0;color:#374151;font-size:16px;line-height:1.7;">Regards,<br><strong>' . SITE_NAME . '</strong></p>';
+
+    return email_shell('We Received Your Message', 'Thank You', $content);
+}
+
+function email_detail_row(string $label, string $value, bool $alreadyEscaped = false): string
+{
+    $displayValue = $alreadyEscaped ? $value : e($value);
+
+    return '<div style="border:1px solid #e5e7eb;border-radius:6px;margin-bottom:10px;overflow:hidden;">'
+        . '<div style="background:#f9fafb;color:#6b7280;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:10px 14px;">' . e($label) . '</div>'
+        . '<div style="background:#ffffff;color:#111827;font-size:15px;line-height:1.6;padding:13px 14px;">' . $displayValue . '</div>'
+        . '</div>';
+}
+
+function email_shell(string $title, string $eyebrow, string $content): string
+{
+    return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+        . '<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,Helvetica,sans-serif;">'
+        . '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f3f4f6;padding:28px 12px;">'
+        . '<tr><td align="center">'
+        . '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;">'
+        . '<tr><td style="background:#2b8b94;padding:26px 30px;">'
+        . '<div style="color:#dff6f8;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;">' . e($eyebrow) . '</div>'
+        . '<h1 style="margin:0;color:#ffffff;font-size:26px;line-height:1.25;font-weight:800;">' . e($title) . '</h1>'
+        . '</td></tr>'
+        . '<tr><td style="padding:30px;">' . $content . '</td></tr>'
+        . '<tr><td style="background:#111827;padding:18px 30px;color:#d1d5db;font-size:12px;line-height:1.6;">'
+        . '<strong style="color:#ffffff;">' . SITE_NAME . '</strong><br>'
+        . '729 Capability Green, Luton, Bedfordshire, LU1 3LU<br>'
+        . 'Info@centrefordomesticabuse.co.uk'
+        . '</td></tr>'
+        . '</table>'
+        . '</td></tr>'
+        . '</table>'
+        . '</body></html>';
 }
 
 function send_with_phpmailer(string $to, string $subject, string $html, ?string $replyToEmail = null, ?string $replyToName = null, ?string $attachment = null): void

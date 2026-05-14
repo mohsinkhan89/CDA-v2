@@ -1369,40 +1369,68 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                       <style>
                         .contact-form-section {
                           width: 100%;
-                          padding: 70px 20px;
                           background: #fff;
                           font-family: Arial, sans-serif;
+                          display: flex;
+                          justify-content: center;
                         }
 
                         .contact-form-box {
-                          max-width: 560px;
-                          margin: 0 auto;
-                          text-align: left;
+                          width: 900px;
                         }
 
                         .contact-form-box h4 {
-                          font-size: 15px;
+                          font-size: 30px;
                           letter-spacing: 1.5px;
-                          color: #333;
+                          color: #2b8b94;
                           margin-bottom: 28px;
-                          font-weight: 600;
+                          font-weight: 400;
+                          text-align: center;
                         }
 
                         .form-group {
                           margin-bottom: 18px;
+                          position: relative;
                         }
-
+                        .form-group label {
+                          position: absolute;
+                          top: 20px;
+                          left: 14px;
+                          color: rgb(71 71 71 / 69%);
+                          font-size: 20px;
+                          font-weight: 400;
+                          line-height: 1;
+                          pointer-events: none;
+                          background: #fff;
+                          padding: 0 4px;
+                          transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease;
+                        }
+                        .form-group input:focus + label,
+                        .form-group textarea:focus + label,
+                        .form-group input:not(:placeholder-shown) + label,
+                        .form-group textarea:not(:placeholder-shown) + label {
+                          font-size: 15px !important;
+                          font-weight: 400 !important;
+                          top: 10px !important;
+                          color: #2b8b94 !important;
+                        }
                         .form-group input,
                         .form-group textarea {
                           width: 100%;
-                          border: none;
-                          border-bottom: 1px solid #bfbfbf;
-                          padding: 13px 0;
+                          border: 1px solid rgb(71 71 71 / 34%);
+                          padding: 20px 14px 20px;
                           font-size: 15px;
                           color: #333;
                           outline: none;
                           background: transparent;
                           font-family: inherit;
+                          box-sizing: border-box;
+                          border-radius: 5px;
+                        }
+
+                        .form-group input:focus,
+                        .form-group textarea:focus {
+                          border-color: #2b8b94;
                         }
 
                         .form-group textarea {
@@ -1416,7 +1444,11 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                         }
 
                         .form-field-error {
-                          border-bottom-color: #b42318 !important;
+                          border-color: #b42318 !important;
+                        }
+
+                        .form-field-error::placeholder {
+                          color: #8a1f11;
                         }
 
                         .contact-form-error {
@@ -1451,6 +1483,9 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                           margin: 24px 0;
                           color: #333;
                           font-size: 15px;
+                          display: flex;
+                          justify-content: space-between;
+                          align-items: center;
                         }
 
                         .file-upload label {
@@ -1458,6 +1493,8 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                           cursor: pointer;
                           margin-bottom: 10px;
                           color: #333;
+                          text-decoration: none;
+                          font-size: 20px;
                         }
 
                         .file-upload input {
@@ -1466,18 +1503,24 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 
                         .file-upload span {
                           display: block;
-                          font-size: 14px;
+                          font-size: 20px;
                           color: #555;
                         }
 
                         button {
-                          background: #333;
+                          background: #000;
                           color: #fff;
                           border: none;
-                          padding: 12px 42px;
-                          font-size: 15px;
+                          padding: 20px 42px;
+                          font-size: 20px;
                           cursor: pointer;
                           transition: 0.3s ease;
+                          border-radius: 35px;
+                        }
+
+                        button:disabled {
+                          cursor: wait;
+                          opacity: 0.7;
                         }
 
                         button:hover {
@@ -1486,7 +1529,6 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 
                         .recaptcha-text {
                           margin-top: 18px;
-                          font-size: 12px;
                           line-height: 1.5;
                           color: #666;
                         }
@@ -1495,14 +1537,58 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                           color: #333;
                           text-decoration: underline;
                         }
+                        .contact-button {
+                          display: flex;
+                          flex-direction: column;
+                          align-items: center;
+                        }
 
                         @media (max-width: 600px) {
+                          .file-upload label span svg {
+                            font-size: 22px!important;
+                          }
+                          .file-upload label {
+                            display: flex;
+                          }
+                          .recaptcha-text {
+                            text-align: center;
+                            font-size: 13px;
+                          }
+                          .contact-form-box h4 {
+                            margin-top: 0px;
+                          }
                           .contact-form-section {
-                            padding: 45px 18px;
+                            padding: 0px;
                           }
 
                           button {
                             width: 100%;
+                          }
+                        }
+                        @media (max-width: 768px) {
+                          .form-group input:focus + label, .form-group textarea:focus + label, .form-group input:not(:placeholder-shown) + label, .form-group textarea:not(:placeholder-shown) + label {
+                            font-size: 13px !important;
+                          }
+                          .form-group label {
+                            font-size: 15px;
+                          }
+                          .file-upload label span svg {
+                            font-size: 25px!important;
+                          }
+                          .file-upload label {
+                            display: flex;
+                          }
+                          .recaptcha-text {
+                            margin-top: 18px;
+                            text-align: center;
+                            font-size: 12px;
+                          }
+                          .contact-form-box {
+                            width: 580px;
+                          }
+                          .contact-form-box h4 {
+                            font-size: 20px;
+                            margin-top: 0px;
                           }
                         }
                       </style>
@@ -1514,30 +1600,36 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                             <div id="contactFormError" class="contact-form-error" role="alert"></div>
                             <input type="text" name="_app_id" autocomplete="off" tabindex="-1" style="display:none" value="">
                             <div class="form-group">
-                              <input type="text" id="name" name="name" placeholder="Name*" required>
+                              <input type="text" id="name" name="name" placeholder=" " required>
+                              <label for="name">Name*</label>
                             </div>
 
                             <div class="form-group">
-                              <input type="email" id="email" name="email" placeholder="Email*" required>
+                              <input type="email" id="email" name="email" placeholder=" " required>
+                              <label for="email">Email*</label>
                             </div>
 
                             <div class="form-group">
-                              <textarea id="note" name="note" placeholder="Note*" required rows="5"></textarea>
+                              <textarea id="note" name="note" placeholder=" " required rows="5"></textarea>
+                              <label for="note">Note*</label>
                             </div>
 
                             <div class="file-upload">
-                              <label for="file" id="fileTrigger">Attach Files</label>
+                              <label for="file" id="fileTrigger">
+                                <span rel="" role="button" aria-haspopup="menu" data-ux="LinkIcon" data-typography="LinkAlpha" class="x-el x-el-span c2-38 c2-39 c2-g c2-h c2-i c2-r c2-k c2-3a c2-3 c2-3b c2-4 c2-3c c2-3d c2-3e c2-5 c2-6 c2-7 c2-8"><svg viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" data-ux="Icon" data-aid="paperclip" class="x-el x-el-svg c2-1 c2-2 c2-q c2-r c2-s c2-t c2-u c2-3 c2-4 c2-5 c2-6 c2-7 c2-8"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6 11.6L17 13l-5.9 5.9c-1.3 1.3-2.9 1.9-4.6 1.9-1.7 0-3.2-.7-4.5-2-2.5-2.5-2.5-6.6 0-9.2l7.1-7.1.1-.1c1.9-2 5.1-2 7.1 0l.1.1c2 2 2 5.1 0 7.1l-6.9 6.6c-.7.7-1.6 1.1-2.5 1.2h-.3c-.9 0-1.7-.3-2.2-.9-.7-.7-1-1.6-.9-2.6.1-.9.5-1.8 1.2-2.5l5.5-5.8L11.7 7l-5.5 5.9c-.4.4-.6.8-.6 1.3 0 .2 0 .7.3 1 .3.3.7.3 1 .3.4 0 .9-.3 1.3-.6L15 8.2C16.2 7 16.2 5.1 15 4l-.1-.1c-1.2-1.2-3.1-1.2-4.3 0l-.7.7-6.5 6.5c-1.8 1.8-1.8 4.6 0 6.3 1.8 1.7 4.6 1.8 6.3 0l5.9-5.8z"></path></svg></span>
+                                Attach Files</label>
                               <input type="file" id="file" name="file" required>
-                              <span id="fileName">Attachment required</span>
+                              <span id="fileName">Attachment (0)</span>
+                            </div>
+                            <div class="contact-button">
+                              <button type="submit">Send</button>
+                              <p class="recaptcha-text">
+                                This site is protected by reCAPTCHA and the Google
+                                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and
+                                <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Terms of Service</a> apply.
+                              </p>
                             </div>
 
-                            <button type="submit">Send</button>
-
-                            <p class="recaptcha-text">
-                              This site is protected by reCAPTCHA and the Google
-                              <a href="#">Privacy Policy</a> and
-                              <a href="#">Terms of Service</a> apply.
-                            </p>
                           </form>
                           <div id="contactFormSuccess" class="contact-form-success" role="status" aria-live="polite">
                             <h4>Thank you</h4>
