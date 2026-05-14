@@ -109,14 +109,42 @@ function wants_json_response(): bool
     return strtolower($requestedWith) === 'xmlhttprequest' || strpos($accept, 'application/json') !== false;
 }
 
-function save_uploaded_file(): string
+function save_uploaded_files(): array
 {
     if (empty($_FILES['file']) || !is_array($_FILES['file'])) {
-        fail_response('Please attach a file.');
+        fail_response('Please attach at least one file.');
     }
 
-    $upload = $_FILES['file'];
+    $uploads = $_FILES['file'];
+    $savedFiles = [];
 
+    if (is_array($uploads['name'] ?? null)) {
+        foreach ($uploads['name'] as $index => $name) {
+            if (($uploads['error'][$index] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+
+            $savedFiles[] = save_one_uploaded_file([
+                'name' => $name,
+                'type' => $uploads['type'][$index] ?? '',
+                'tmp_name' => $uploads['tmp_name'][$index] ?? '',
+                'error' => $uploads['error'][$index] ?? UPLOAD_ERR_NO_FILE,
+                'size' => $uploads['size'][$index] ?? 0,
+            ]);
+        }
+    } else {
+        $savedFiles[] = save_one_uploaded_file($uploads);
+    }
+
+    if ($savedFiles === []) {
+        fail_response('Please attach at least one valid file.');
+    }
+
+    return $savedFiles;
+}
+
+function save_one_uploaded_file(array $upload): string
+{
     if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
         fail_response('Please attach a valid file.');
     }
@@ -155,16 +183,34 @@ function save_uploaded_file(): string
     return 'uploads/contact-files/' . $fileName;
 }
 
+function extract_file_paths(string $storedFiles): array
+{
+    $decoded = json_decode($storedFiles, true);
+
+    if (is_array($decoded)) {
+        return array_values(array_filter($decoded, 'is_string'));
+    }
+
+    return $storedFiles === '' ? [] : [$storedFiles];
+}
+
 function build_admin_body(array $contact): string
 {
-    $fileUrl = base_url() . $contact['file'];
+    $fileLinks = '';
+
+    foreach (extract_file_paths((string)$contact['file']) as $index => $filePath) {
+        $fileUrl = base_url() . $filePath;
+        $fileLinks .= '<div style="margin:0 0 10px;">'
+            . '<a href="' . e($fileUrl) . '" style="display:inline-block;background:#2b8b94;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:13px 20px;border-radius:4px;">View Uploaded File ' . ($index + 1) . '</a>'
+            . '</div>';
+    }
 
     $content = '<p style="margin:0 0 18px;color:#4b5563;font-size:15px;line-height:1.6;">A new enquiry has been submitted from the contact form.</p>'
         . email_detail_row('Name', $contact['name'])
         . email_detail_row('Email', $contact['email'])
         . email_detail_row('Note', nl2br(e($contact['note'])), true)
         . '<div style="margin-top:24px;">'
-        . '<a href="' . e($fileUrl) . '" style="display:inline-block;background:#2b8b94;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:13px 20px;border-radius:4px;">View Uploaded File</a>'
+        . $fileLinks
         . '</div>';
 
     return email_shell('New Contact Enquiry', 'Admin Notification', $content);
@@ -229,8 +275,12 @@ function send_with_phpmailer(string $to, string $subject, string $html, ?string 
         $mail->addReplyTo($replyToEmail, $replyToName ?? $replyToEmail);
     }
 
-    if ($attachment !== null && is_file(__DIR__ . '/' . $attachment)) {
-        $mail->addAttachment(__DIR__ . '/' . $attachment);
+    if ($attachment !== null) {
+        foreach (extract_file_paths($attachment) as $filePath) {
+            if (is_file(__DIR__ . '/' . $filePath)) {
+                $mail->addAttachment(__DIR__ . '/' . $filePath);
+            }
+        }
     }
 
     $mail->isHTML(true);
@@ -303,14 +353,20 @@ function build_mime_message(string $to, string $subject, string $html, ?string $
     $message .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
     $message .= $html . "\r\n\r\n";
 
-    if ($attachment !== null && is_file(__DIR__ . '/' . $attachment)) {
-        $attachmentPath = __DIR__ . '/' . $attachment;
-        $attachmentName = basename($attachmentPath);
-        $message .= '--' . $boundary . "\r\n";
-        $message .= 'Content-Type: application/octet-stream; name="' . addcslashes($attachmentName, "\\\"") . "\"\r\n";
-        $message .= "Content-Transfer-Encoding: base64\r\n";
-        $message .= 'Content-Disposition: attachment; filename="' . addcslashes($attachmentName, "\\\"") . "\"\r\n\r\n";
-        $message .= chunk_split(base64_encode((string)file_get_contents($attachmentPath))) . "\r\n";
+    if ($attachment !== null) {
+        foreach (extract_file_paths($attachment) as $filePath) {
+            if (!is_file(__DIR__ . '/' . $filePath)) {
+                continue;
+            }
+
+            $attachmentPath = __DIR__ . '/' . $filePath;
+            $attachmentName = basename($attachmentPath);
+            $message .= '--' . $boundary . "\r\n";
+            $message .= 'Content-Type: application/octet-stream; name="' . addcslashes($attachmentName, "\\\"") . "\"\r\n";
+            $message .= "Content-Transfer-Encoding: base64\r\n";
+            $message .= 'Content-Disposition: attachment; filename="' . addcslashes($attachmentName, "\\\"") . "\"\r\n\r\n";
+            $message .= chunk_split(base64_encode((string)file_get_contents($attachmentPath))) . "\r\n";
+        }
     }
 
     $message .= '--' . $boundary . "--\r\n";
@@ -378,7 +434,12 @@ if ($note === '') {
     fail_response('Note is required.');
 }
 
-$file = save_uploaded_file();
+$filePaths = save_uploaded_files();
+$file = json_encode($filePaths, JSON_UNESCAPED_SLASHES);
+
+if ($file === false) {
+    fail_response('Uploaded file details could not be saved.');
+}
 
 $db = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if (!$db) {
