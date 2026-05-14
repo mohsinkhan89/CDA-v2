@@ -494,7 +494,7 @@ try {
         build_user_body($contact['name'])
     );
 
-    render_response(true, 'Thank you', 'Your message has been sent successfully.');
+    render_response(true, 'Thank you', 'Thank you for your inquiry! A member of our team will respond shortly.');
 } catch (Throwable $mailError) {
     render_response(true, 'Details saved', 'Your details have been saved in the database, but email could not be sent right now.');
 }

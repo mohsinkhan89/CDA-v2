@@ -1466,6 +1466,7 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                           display: none;
                           padding: 28px 0;
                           color: #1d4932;
+                          text-align: center;
                         }
 
                         .contact-form-success h4 {
@@ -1475,8 +1476,7 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 
                         .contact-form-success p {
                           margin: 0;
-                          font-size: 15px;
-                          line-height: 1.7;
+                          font-size: 22px;
                         }
 
                         .file-upload {
@@ -1572,6 +1572,9 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                         }
 
                         @media (max-width: 600px) {
+                          .contact-form-success p {
+                            font-size: 16px;
+                          }
                           .file-upload label span svg {
                             font-size: 22px!important;
                           }
@@ -1594,6 +1597,9 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                           }
                         }
                         @media (max-width: 768px) {
+                          .contact-form-success p {
+                            font-size: 20px;
+                          }
                           .form-group input:focus + label, .form-group textarea:focus + label, .form-group input:not(:placeholder-shown) + label, .form-group textarea:not(:placeholder-shown) + label {
                             font-size: 13px !important;
                           }
@@ -1622,7 +1628,7 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
                       </style>
                       <div class="contact-form-section">
                         <div class="contact-form-box">
-                          <h4>ANY ENQUIRIES</h4>
+                          <h4 id="contactFormHeading">ANY ENQUIRIES</h4>
 
                           <form id="contactForm" action="contact-form-submit.php" method="post" enctype="multipart/form-data" novalidate>
                             <div id="contactFormError" class="contact-form-error" role="alert"></div>
@@ -1661,8 +1667,8 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 
                           </form>
                           <div id="contactFormSuccess" class="contact-form-success" role="status" aria-live="polite">
-                            <h4>Thank you</h4>
-                            <p>Your message has been sent successfully.</p>
+                            <div data-ux="Block" data-aid="CONTACT_FORM_SUBMIT_SUCCESS" class="x-el x-el-div c2-1 c2-2 c2-3 c2-4 c2-5 c2-6 c2-7 c2-8"><svg viewBox="0 0 24 24" fill="#0078d4" width="72" height="72" data-ux="Icon" class="x-el x-el-svg c2-1 c2-2 c2-q c2-r c2-u c2-5f c2-3 c2-4 c2-5 c2-6 c2-7 c2-8"><path fill-rule="evenodd" d="M12 4a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8zm0 1.5A6.507 6.507 0 0 0 5.5 12c0 3.584 2.915 6.5 6.5 6.5 3.584 0 6.5-2.916 6.5-6.5S15.584 5.5 12 5.5zm3.316 4.249a.72.72 0 0 1 .195.533.719.719 0 0 1-.252.512l-4.099 3.491a.846.846 0 0 1-.56.209.845.845 0 0 1-.62-.268l-1.298-1.419a.723.723 0 0 1 .056-1.046.774.774 0 0 1 1.067.055l.845.931 3.6-3.053a.771.771 0 0 1 1.066.055z"></path></svg></div>
+                            <p>Thank you for your inquiry! A member of our team will respond shortly.</p>
                           </div>
                         </div>
                       </div>
@@ -1931,4 +1937,4 @@ SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
     <script>"use strict";Core.utils.onAllowCookieTracking(function () {const queryString = window.location.search;const urlParams = new URLSearchParams(queryString);const whiteList = ['gclid', 'fbclid', 'gdan_clid'];const belongToList = list => item => list.includes(item);const belongToWhiteList = belongToList(whiteList);Array.from(urlParams).forEach(param => {const [queryKey, queryResult] = param;if (!belongToWhiteList(queryKey)) return;localStorage.setItem(queryKey, queryResult);});});
 "use strict";Core.utils.onAllowCookieTracking(() => {if (!document.cookie.includes("x-visitor-id")) {!function (o, i, e = 60) {const t = new Date();t.setTime(t.getTime() + 864e5 * e);const n = `expires=${t.toUTCString()}`;document.cookie = `${o}=${i};${n};path=/`;}("x-visitor-id", crypto.randomUUID(), 60);}});</script>
     <script async src="assets/f111c7b-1.js"
-      crossorigin></script><script>(function(){var form=document.getElementById("contactForm");if(!form)return;var file=document.getElementById("file"),trigger=document.getElementById("fileTrigger"),fileName=document.getElementById("fileName"),errorBox=document.getElementById("contactFormError"),successBox=document.getElementById("contactFormSuccess"),submitButton=form.querySelector('button[type="submit"]');function showError(message){if(errorBox){errorBox.textContent=message;errorBox.style.display="block";}if(successBox)successBox.style.display="none";}function clearError(){if(errorBox){errorBox.textContent="";errorBox.style.display="none";}}function markField(el,invalid){if(!el)return;el.classList.toggle("form-field-error",invalid);el.setAttribute("aria-invalid",invalid?"true":"false");}function validateForm(){var firstInvalid=null,message="";["name","email","note","file"].forEach(function(id){var el=document.getElementById(id),invalid=false;if(!el)return;if(id==="file"){invalid=!el.files||!el.files.length;if(invalid)message=message||"Please attach a file.";}else{invalid=!el.value.trim();if(invalid)message=message||"Please fill all required fields.";if(id==="email"&&!invalid&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())){invalid=true;message=message||"Please enter a valid email address.";}}markField(el,invalid);if(invalid&&!firstInvalid)firstInvalid=el;});if(firstInvalid){showError(message);firstInvalid.focus({preventScroll:false});return false;}clearError();return true;}if(trigger&&file){trigger.addEventListener("click",function(){file.click();});file.addEventListener("change",function(){markField(file,!file.files||!file.files.length);});}["name","email","note"].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener("input",function(){markField(el,false);clearError();});}});form.addEventListener("submit",function(e){e.preventDefault();if(!validateForm())return;if(submitButton){submitButton.disabled=true;submitButton.textContent="Sending...";}fetch(form.action,{method:"POST",body:new FormData(form),headers:{"Accept":"application/json","X-Requested-With":"XMLHttpRequest"}}).then(function(response){return response.json().catch(function(){return {success:false,message:"Server response could not be read."};}).then(function(data){if(!response.ok&&data.success!==true)throw data;return data;});}).then(function(data){if(data.success){form.style.display="none";if(successBox){successBox.querySelector("p").textContent=data.message||"Your message has been sent successfully.";successBox.style.display="block";successBox.scrollIntoView({behavior:"smooth",block:"center"});}}else{throw data;}}).catch(function(error){showError(error&&error.message?error.message:"Something went wrong. Please try again.");}).finally(function(){if(submitButton){submitButton.disabled=false;submitButton.textContent="Send";}});});})();</script><script>(function(){var input=document.getElementById("file"),count=document.getElementById("fileName"),list=document.getElementById("fileList");if(!input||!count||!list)return;var selectedFiles=[];function syncInput(){var transfer=new DataTransfer();selectedFiles.forEach(function(file){transfer.items.add(file);});input.files=transfer.files;}function renderFiles(){count.textContent="Attachment ("+selectedFiles.length+")";list.innerHTML="";selectedFiles.forEach(function(file,index){var item=document.createElement("li"),name=document.createElement("span"),remove=document.createElement("button");name.textContent=file.name;remove.type="button";remove.setAttribute("aria-label","Remove "+file.name);remove.textContent="x";remove.addEventListener("click",function(){selectedFiles.splice(index,1);syncInput();renderFiles();});item.appendChild(name);item.appendChild(remove);list.appendChild(item);});}input.addEventListener("change",function(){Array.prototype.forEach.call(input.files||[],function(file){selectedFiles.push(file);});syncInput();renderFiles();});renderFiles();})();</script></body></html>
+      crossorigin></script><script>(function(){var form=document.getElementById("contactForm");if(!form)return;var file=document.getElementById("file"),trigger=document.getElementById("fileTrigger"),fileName=document.getElementById("fileName"),errorBox=document.getElementById("contactFormError"),successBox=document.getElementById("contactFormSuccess"),submitButton=form.querySelector('button[type="submit"]');function showError(message){if(errorBox){errorBox.textContent=message;errorBox.style.display="block";}if(successBox)successBox.style.display="none";}function clearError(){if(errorBox){errorBox.textContent="";errorBox.style.display="none";}}function markField(el,invalid){if(!el)return;el.classList.toggle("form-field-error",invalid);el.setAttribute("aria-invalid",invalid?"true":"false");}function validateForm(){var firstInvalid=null,message="";["name","email","note","file"].forEach(function(id){var el=document.getElementById(id),invalid=false;if(!el)return;if(id==="file"){invalid=!el.files||!el.files.length;if(invalid)message=message||"Please attach a file.";}else{invalid=!el.value.trim();if(invalid)message=message||"Please fill all required fields.";if(id==="email"&&!invalid&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())){invalid=true;message=message||"Please enter a valid email address.";}}markField(el,invalid);if(invalid&&!firstInvalid)firstInvalid=el;});if(firstInvalid){showError(message);firstInvalid.focus({preventScroll:false});return false;}clearError();return true;}if(trigger&&file){file.addEventListener("change",function(){markField(file,!file.files||!file.files.length);});}["name","email","note"].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener("input",function(){markField(el,false);clearError();});}});form.addEventListener("submit",function(e){e.preventDefault();if(!validateForm())return;if(submitButton){submitButton.disabled=true;submitButton.textContent="Sending...";}fetch(form.action,{method:"POST",body:new FormData(form),headers:{"Accept":"application/json","X-Requested-With":"XMLHttpRequest"}}).then(function(response){return response.json().catch(function(){return {success:false,message:"Server response could not be read."};}).then(function(data){if(!response.ok&&data.success!==true)throw data;return data;});}).then(function(data){if(data.success){form.style.display="none";var heading=document.getElementById("contactFormHeading");if(heading){heading.style.display="none";}if(successBox){successBox.querySelector("p").textContent=data.message||"Thank you for your inquiry! A member of our team will respond shortly.";successBox.style.display="block";successBox.scrollIntoView({behavior:"smooth",block:"center"});}}else{throw data;}}).catch(function(error){showError(error&&error.message?error.message:"Something went wrong. Please try again.");}).finally(function(){if(submitButton){submitButton.disabled=false;submitButton.textContent="Send";}});});})();</script><script>(function(){var input=document.getElementById("file"),count=document.getElementById("fileName"),list=document.getElementById("fileList");if(!input||!count||!list)return;var selectedFiles=[];function syncInput(){var transfer=new DataTransfer();selectedFiles.forEach(function(file){transfer.items.add(file);});input.files=transfer.files;}function renderFiles(){count.textContent="Attachment ("+selectedFiles.length+")";list.innerHTML="";selectedFiles.forEach(function(file,index){var item=document.createElement("li"),name=document.createElement("span"),remove=document.createElement("button");name.textContent=file.name;remove.type="button";remove.setAttribute("aria-label","Remove "+file.name);remove.textContent="x";remove.addEventListener("click",function(){selectedFiles.splice(index,1);syncInput();renderFiles();});item.appendChild(name);item.appendChild(remove);list.appendChild(item);});}input.addEventListener("change",function(){Array.prototype.forEach.call(input.files||[],function(file){selectedFiles.push(file);});syncInput();renderFiles();});renderFiles();})();</script></body></html>
